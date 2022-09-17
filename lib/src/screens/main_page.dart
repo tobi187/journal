@@ -85,7 +85,13 @@ class _MainPageState extends State<MainPage> {
                 child: const Text("Send Mail"),
               ),
               ElevatedButton(
-                onPressed: () async {},
+                onPressed: () {
+                  store.journal.todos = aufgabenController.text;
+                  store.journal.weeklyTheme = berichtController.text;
+                  store.journal.school = schulController.text;
+
+                  store.updateJournal();
+                },
                 child: const Text("Save"),
               )
             ],

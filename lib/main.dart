@@ -6,8 +6,8 @@ import 'package:journal/src/services/meta_data_provider.dart';
 
 Future<void> main() async {
   var w = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: w);
   await JournalProvider().getInstance();
   await MetaDataProvider().getInstance();
-  FlutterNativeSplash.preserve(widgetsBinding: w);
   runApp(const MyApp());
 }
