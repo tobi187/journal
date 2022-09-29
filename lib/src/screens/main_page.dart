@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:journal/src/screens/settings_page.dart';
 import 'package:journal/src/services/data_provider.dart';
 import 'package:journal/src/widgets/text_field.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  static const routeName = "/";
-
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  final TextEditingController berichtController = TextEditingController();
-  final TextEditingController aufgabenController = TextEditingController();
-  final TextEditingController schulController = TextEditingController();
+  final berichtController = TextEditingController();
+  final aufgabenController = TextEditingController();
+  final schulController = TextEditingController();
 
   final store = JournalProvider();
 
@@ -47,7 +46,12 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              //Navigator.restorablePushNamed(context, SettingsView.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Settings(),
+                ),
+              );
             },
           ),
         ],
