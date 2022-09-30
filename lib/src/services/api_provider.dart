@@ -7,7 +7,8 @@ import 'package:week_of_year/week_of_year.dart';
 const apiSecret = "@sWMi#N&z#g@X4xmobQbfYy&3**6y3sH7Q&!VFajy";
 
 class APIProvider {
-  static const baseUrl = "http://10.0.2.2:5000/api/v1/word";
+  static const baseUrl =
+      "https://sharedshopping.eu.pythonanywhere.com/api/v1/word";
   final JournalProvider journal = JournalProvider();
   final MetaDataProvider metaData = MetaDataProvider();
 
@@ -15,7 +16,10 @@ class APIProvider {
     var url = Uri.parse(baseUrl);
     var response = await http.post(
       url,
-      headers: {"Content-Type": "application/json", "API_KEY": apiSecret},
+      headers: {
+        "Content-Type": "application/json",
+        "ACCESS-KEY-CONTENT": apiSecret
+      },
       body: jsonEncode(_createPayload()),
     );
 

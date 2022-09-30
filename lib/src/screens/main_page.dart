@@ -121,12 +121,12 @@ class _MainPageState extends State<MainPage> {
                         });
                         Fluttertoast.showToast(msg: "Success");
                       } else {
-                        Fluttertoast.showToast(
-                          msg: "Sorry something went wrong",
-                        );
                         setState(() {
                           _isLoading = false;
                         });
+                        Fluttertoast.showToast(
+                          msg: "Sorry something went wrong",
+                        );
                       }
                     }
                   },
