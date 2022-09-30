@@ -32,10 +32,7 @@ class APIProvider {
   }
 
   Map<String, dynamic> _createPayload() {
-    var date = metaData.journalData.date.isEmpty
-        ? DateTime.now().weekOfYear.toString()
-        : metaData.journalData.date;
-
+    
     return {
       "todos": journal.journal.todos.trim(),
       "weekly_theme": journal.journal.weeklyTheme.trim(),
@@ -44,8 +41,18 @@ class APIProvider {
       "department": metaData.journalData.department.trim(),
       "berichtNummer": metaData.journalData.berichtsHeftNumber,
       "mails": metaData.journalData.receiveMails,
-      "date": date.trim(),
+      "date": getDate(metaData.journalData.date).trim(),
       "point": metaData.journalData.point.trim()
     };
+  }
+
+  String getDate(String userDate) {
+    int calendarWeek = DateTime.now().weekOfYear;
+    if (userDate.isEmpty) return calendarWeek.toString();
+    if (userDate.startsWith("-")) {
+      var diff = int.tryParse(userDate) ?? 0;
+      return (calendarWeek - diff).toString();
+    }
+    return userDate;
   }
 }

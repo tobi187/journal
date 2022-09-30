@@ -63,12 +63,7 @@ class _MainPageState extends State<MainPage> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Settings(),
-                ),
-              );
+              Navigator.restorablePushNamed(context, Settings.routeName);
             },
           ),
         ],
@@ -147,9 +142,10 @@ class _MainPageState extends State<MainPage> {
                     });
                   },
                   child: const Text("Save"),
-                )
+                ),
               ],
-            )
+            ),
+            const SizedBox(height: 10)
           ],
         ),
       ),

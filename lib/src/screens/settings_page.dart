@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:journal/src/models/journal_data.dart';
 import 'package:journal/src/services/meta_data_provider.dart';
+import 'package:journal/src/settings/settings_controller.dart';
 import 'package:journal/src/widgets/settings_item.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({super.key});
+  const Settings({super.key, required this.settingsController});
+  final SettingsController settingsController;
+
+  static const routeName = "/settings";
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -62,26 +66,26 @@ class _SettingsState extends State<Settings> {
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           children: [
-            DropdownButton<ThemeMode>(
-              // Read the selected themeMode from the controller
-              //value: controller.themeMode,
-              // Call the updateThemeMode method any time the user selects a theme.
-              //onChanged: controller.updateThemeMode,
-              onChanged: null,
-              items: const [
-                DropdownMenuItem(
-                  value: ThemeMode.system,
-                  child: Text('System Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.light,
-                  child: Text('Light Theme'),
-                ),
-                DropdownMenuItem(
-                  value: ThemeMode.dark,
-                  child: Text('Dark Theme'),
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: DropdownButton<ThemeMode>(
+                onChanged: widget.settingsController.updateThemeMode,
+                value: widget.settingsController.themeMode,
+                items: const [
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('System Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('Light Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text('Dark Theme'),
+                  ),
+                ],
+              ),
             ),
             SettingCard(
               labelText: "Emails",
@@ -130,6 +134,7 @@ class _SettingsState extends State<Settings> {
                   setState(() {
                     _isLoading = true;
                   });
+
                   var temp = JournalData(
                       receiveMails: mailController.text
                           .split(",")
