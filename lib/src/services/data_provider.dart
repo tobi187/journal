@@ -1,5 +1,5 @@
 import 'package:journal/src/models/journal.dart';
-import 'package:journal/src/models/journal_data.dart';
+import 'package:journal/src/services/meta_data_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class JournalProvider {
@@ -15,7 +15,6 @@ class JournalProvider {
 
   late SharedPreferences _preferences;
   final Journal journal = Journal();
-  final JournalData journalData = JournalData(receiveMails: []);
 
   void loadJournal() {
     journal.todos = _preferences.getString("todo") ?? "";
@@ -23,15 +22,19 @@ class JournalProvider {
     journal.school = _preferences.getString("school") ?? "";
   }
 
-  void updateJournal() {
-    _preferences.setString("todo", journal.todos);
-    _preferences.setString("weeklyTheme", journal.weeklyTheme);
-    _preferences.setString("school", journal.school);
+  Future updateJournal() async {
+    await _preferences.setString("todo", journal.todos);
+    await _preferences.setString("weeklyTheme", journal.weeklyTheme);
+    await _preferences.setString("school", journal.school);
   }
 
-  void clearJournal() {
-    _preferences.setString("todo", "");
-    _preferences.setString("weeklyTheme", "");
-    _preferences.setString("school", "");
+  Future clearJournal() async {
+    var schools = MetaDataProvider().getSchoolTemplate();
+    await _preferences.setString("todo", "");
+    await _preferences.setString("weeklyTheme", "");
+    await _preferences.setString("school", schools);
+    journal.todos = "";
+    journal.weeklyTheme = "";
+    journal.school = schools;
   }
 }

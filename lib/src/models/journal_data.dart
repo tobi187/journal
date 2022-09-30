@@ -4,11 +4,15 @@ class JournalData {
   String department;
   String date;
   int berichtsHeftNumber;
+  String schoolTemplate;
+  String point;
 
   JournalData(
       {required this.receiveMails,
       this.name = "",
       this.department = "",
       this.berichtsHeftNumber = 1,
-      this.date = "01.01.2000"});
+      this.date = "",
+      this.schoolTemplate = "",
+      this.point = ""});
 }

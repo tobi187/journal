@@ -1,7 +1,11 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:journal/src/screens/settings_page.dart';
+import 'package:journal/src/services/api_provider.dart';
 import 'package:journal/src/services/data_provider.dart';
 import 'package:journal/src/widgets/text_field.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   final schulController = TextEditingController();
 
   final store = JournalProvider();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -41,7 +46,19 @@ class _MainPageState extends State<MainPage> {
         title: const Text('Berichtsheft'),
         actions: [
           IconButton(
-              onPressed: () => store.updateJournal(),
+              onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                await store.clearJournal();
+
+                aufgabenController.text = store.journal.todos;
+                berichtController.text = store.journal.weeklyTheme;
+                schulController.text = store.journal.school;
+                setState(() {
+                  _isLoading = false;
+                });
+              },
               icon: const Icon(Icons.delete)),
           IconButton(
             icon: const Icon(Icons.settings),
@@ -56,51 +73,85 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-          const Text(
-            "Betriebsaufgaben",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: CustomTextField(controller: aufgabenController),
-          ),
-          const Text(
-            "Betriebsbericht",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: CustomTextField(controller: berichtController),
-          ),
-          const Text(
-            "Schule",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: CustomTextField(controller: schulController),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () async {},
-                child: const Text("Send Mail"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  store.journal.todos = aufgabenController.text;
-                  store.journal.weeklyTheme = berichtController.text;
-                  store.journal.school = schulController.text;
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              "Betriebsaufgaben",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: CustomTextField(controller: aufgabenController),
+            ),
+            const Text(
+              "Betriebsbericht",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: CustomTextField(controller: berichtController),
+            ),
+            const Text(
+              "Schule",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: CustomTextField(controller: schulController),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    if (await confirm(context)) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      var res = await APIProvider().sendData();
+                      if (res) {
+                        await store.clearJournal();
 
-                  store.updateJournal();
-                },
-                child: const Text("Save"),
-              )
-            ],
-          )
-        ],
+                        aufgabenController.text = store.journal.todos;
+                        berichtController.text = store.journal.weeklyTheme;
+                        schulController.text = store.journal.school;
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        Fluttertoast.showToast(msg: "Success");
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Sorry something went wrong",
+                        );
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    }
+                  },
+                  child: const Text("Send Mail"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    store.journal.todos = aufgabenController.text;
+                    store.journal.weeklyTheme = berichtController.text;
+                    store.journal.school = schulController.text;
+
+                    await store.updateJournal();
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                  child: const Text("Save"),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

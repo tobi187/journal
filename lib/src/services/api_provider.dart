@@ -4,8 +4,10 @@ import 'package:journal/src/services/meta_data_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:week_of_year/week_of_year.dart';
 
+const apiSecret = "@sWMi#N&z#g@X4xmobQbfYy&3**6y3sH7Q&!VFajy";
+
 class APIProvider {
-  static const baseUrl = "https://server/api/v1/send";
+  static const baseUrl = "http://10.0.2.2:5000/api/v1/word";
   final JournalProvider journal = JournalProvider();
   final MetaDataProvider metaData = MetaDataProvider();
 
@@ -13,31 +15,33 @@ class APIProvider {
     var url = Uri.parse(baseUrl);
     var response = await http.post(
       url,
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json", "API_KEY": apiSecret},
       body: jsonEncode(_createPayload()),
     );
 
-    if (response.statusCode == 200)
-      // ignore: curly_braces_in_flow_control_structures
+    if (response.statusCode == 200) {
+      metaData.postSaveWork();
       return true;
-    else
-      // ignore: curly_braces_in_flow_control_structures
+    } else {
       return false;
+    }
   }
 
   Map<String, dynamic> _createPayload() {
     var date = metaData.journalData.date.isEmpty
-        ? DateTime.now().weekOfYear
+        ? DateTime.now().weekOfYear.toString()
         : metaData.journalData.date;
+
     return {
-      "todos": journal.journal.todos,
-      "weekly_theme": journal.journal.weeklyTheme,
-      "school": journal.journal.school,
-      "name": metaData.journalData.name,
-      "departement": metaData.journalData.department,
+      "todos": journal.journal.todos.trim(),
+      "weekly_theme": journal.journal.weeklyTheme.trim(),
+      "school": journal.journal.school.trim(),
+      "name": metaData.journalData.name.trim(),
+      "department": metaData.journalData.department.trim(),
       "berichtNummer": metaData.journalData.berichtsHeftNumber,
       "mails": metaData.journalData.receiveMails,
-      "date": date
+      "date": date.trim(),
+      "point": metaData.journalData.point.trim()
     };
   }
 }
