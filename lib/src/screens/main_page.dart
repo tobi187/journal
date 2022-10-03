@@ -25,8 +25,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    berichtController.text = store.journal.todos;
-    aufgabenController.text = store.journal.weeklyTheme;
+    aufgabenController.text = store.journal.todos;
+    berichtController.text = store.journal.weeklyTheme;
     schulController.text = store.journal.school;
   }
 
