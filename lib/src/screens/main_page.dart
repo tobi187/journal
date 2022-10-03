@@ -79,14 +79,15 @@ class _MainPageState extends State<MainPage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: CustomTextField(controller: aufgabenController),
+              child: CustomTextFieldWithNLCount(controller: aufgabenController),
             ),
             const Text(
               "Betriebsbericht",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Expanded(
-              child: CustomTextField(controller: berichtController),
+              child:
+                  CustomTextFieldWithWordCount(controller: berichtController),
             ),
             const Text(
               "Schule",
