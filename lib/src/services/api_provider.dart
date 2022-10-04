@@ -32,7 +32,6 @@ class APIProvider {
   }
 
   Map<String, dynamic> _createPayload() {
-    
     return {
       "todos": journal.journal.todos.trim(),
       "weekly_theme": journal.journal.weeklyTheme.trim(),
@@ -51,7 +50,7 @@ class APIProvider {
     if (userDate.isEmpty) return calendarWeek.toString();
     if (userDate.startsWith("-")) {
       var diff = int.tryParse(userDate) ?? 0;
-      return (calendarWeek - diff).toString();
+      return (calendarWeek + diff).toString();
     }
     return userDate;
   }
