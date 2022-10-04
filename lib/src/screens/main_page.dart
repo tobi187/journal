@@ -69,6 +69,7 @@ class _MainPageState extends State<MainPage> {
         ],
       ),
       body: ModalProgressHUD(
+        blur: 1.5,
         inAsyncCall: _isLoading,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,6 +139,7 @@ class _MainPageState extends State<MainPage> {
                     store.journal.school = schulController.text;
 
                     await store.updateJournal();
+
                     setState(() {
                       _isLoading = false;
                     });

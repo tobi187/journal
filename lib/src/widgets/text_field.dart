@@ -29,7 +29,7 @@ class CustomTextFieldWithNLCount extends StatelessWidget {
       : super(key: key);
 
   final TextEditingController controller;
-
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -72,7 +72,13 @@ class CustomTextFieldWithWordCount extends StatelessWidget {
           keyboardType: TextInputType.multiline,
           minLines: 1,
           maxLines: 30,
-          maxLength: 1000,
+          buildCounter: (context,
+              {required currentLength, required isFocused, maxLength}) {
+            return Text(
+              "$currentLength/950",
+              style: Theme.of(context).textTheme.caption,
+            );
+          },
           decoration: const InputDecoration(
               contentPadding: EdgeInsets.all(8), border: InputBorder.none),
           style: const TextStyle(fontSize: 17),

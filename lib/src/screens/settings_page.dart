@@ -62,6 +62,7 @@ class _SettingsState extends State<Settings> {
         title: const Text('Settings'),
       ),
       body: ModalProgressHUD(
+        blur: 1.5,
         inAsyncCall: _isLoading,
         child: ListView(
           padding: const EdgeInsets.all(8.0),
