@@ -3,8 +3,9 @@ import 'package:journal/src/services/data_provider.dart';
 import 'package:journal/src/services/meta_data_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:week_of_year/week_of_year.dart';
+import 'package:journal/src/globals.dart' as globals;
 
-const apiSecret = "@sWMi#N&z#g@X4xmobQbfYy&3**6y3sH7Q&!VFajy";
+// library journal.globals;
 
 class APIProvider {
   static const baseUrl =
@@ -18,7 +19,7 @@ class APIProvider {
       url,
       headers: {
         "Content-Type": "application/json",
-        "ACCESS-KEY-CONTENT": apiSecret
+        "ACCESS-KEY-CONTENT": globals.API_KEY
       },
       body: jsonEncode(_createPayload()),
     );
